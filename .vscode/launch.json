@@ -10,9 +10,10 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "web_scraping_tool.main:app",
+                "web-scrapping-tool.web_scrapping_tool.main:app",
                 "--reload"
             ],
+            "envFile": "${workspaceFolder}/.env",
             "jinja": true
         }
     ]
