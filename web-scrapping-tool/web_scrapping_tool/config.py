@@ -11,7 +11,7 @@ class EnvironmentVariables(BaseSettings):
     host: str = Field("127.0.0.1", env='HOST')
     origins: str = Field("http://localhost:8080", env='ORIGINS')
     database: str = Field("main", env="DATABASE")
-
+    usedatabase: str = Field("true", env="USEDATABASE")
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'

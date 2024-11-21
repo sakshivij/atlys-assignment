@@ -1,7 +1,7 @@
 from pymongo import AsyncMongoClient
 from pymongo.database import Database as MongoDatabase
 
-from ..config import EnvironmentVariables
+from ...config import EnvironmentVariables
 
 env = EnvironmentVariables()
 DATABASE_URL = env.database_url

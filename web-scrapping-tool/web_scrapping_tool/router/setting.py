@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from ..services.service_provider import get_setting_service
+from ..dependencies import get_setting_service
 from ..services.settings import SettingService
 from .model.setting import Setting, SettingCreate
 
