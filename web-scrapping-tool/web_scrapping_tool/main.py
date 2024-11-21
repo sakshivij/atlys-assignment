@@ -1,10 +1,14 @@
+import asyncio
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import EnvironmentVariables
+from .dependencies import get_request_service
 from .router.requests import router as request_router
 from .router.setting import router as setting_router
+from .tasks.request_handler import process_records
 
 app = FastAPI(
     docs_url='/api/1/swagger/index.html',
@@ -13,6 +17,10 @@ app = FastAPI(
     description="API to scrap data from websites",
     version='1.0.0',
 )
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(process_records())
 
 env = EnvironmentVariables()
 

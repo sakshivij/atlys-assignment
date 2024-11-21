@@ -58,3 +58,6 @@ class RequestFilePersistance(IPersistanceOperation):
             await self._write_data(new_data)
             return 1
         return 0
+    
+    async def get_all_unprocessed(self, **kwargs):
+        pass

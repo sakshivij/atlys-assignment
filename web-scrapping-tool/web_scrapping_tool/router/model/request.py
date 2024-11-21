@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Optional
 
 from fastapi import Query
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class Status(Enum):
@@ -10,11 +10,24 @@ class Status(Enum):
     PENDING = "pending"
     PROCESSED = "processed"
 
+# TODO: Why these not being picked as optional
 class RequestCreate(BaseModel):
     override_page_limit: Optional[int]
     setting_id: str
     name: str
     status: Status
+
+    def dict(self, **kwargs):
+        data = super().dict(**kwargs)
+        if isinstance(data.get('status'), Status):
+            data['status'] = data['status'].value
+        return data
+
+    @validator('status', pre=True)
+    def parse_status(cls, value):
+        if isinstance(value, str):
+            return Status(value)
+        return value
 
 
 class Request(BaseModel):
@@ -22,6 +35,19 @@ class Request(BaseModel):
     override_page_limit: Optional[int]
     setting_id: str
     name: str
+    status: Status
 
+    def dict(self, **kwargs):
+        data = super().dict(**kwargs)
+        if isinstance(data.get('status'), Status):
+            data['status'] = data['status'].value
+        return data
+    
+    @validator('status', pre=True)
+    def parse_status(cls, value):
+        if isinstance(value, str):
+            return Status(value)  # Convert string to Enum
+        return value
     class Config:
         orm_mode = True
+        use_enum_values = True

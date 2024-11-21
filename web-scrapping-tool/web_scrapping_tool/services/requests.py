@@ -26,3 +26,6 @@ class RequestService:
 
     async def delete_request(self, request_id: str) -> bool:
         return await self.persistance.delete(request_id)
+    
+    async def get_all_unprocessed(self) -> List[Request]:
+        return await self.persistance.get_all_unprocessed()

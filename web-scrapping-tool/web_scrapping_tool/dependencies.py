@@ -6,6 +6,7 @@ from .config import EnvironmentVariables
 from .persistance.abstract import IPersistanceOperation
 from .persistance.database.implementations.requests import RequestDbPersistance
 from .persistance.database.implementations.settings import SettingDbPersistance
+from .persistance.file.requests import RequestFilePersistance
 from .persistance.file.settings import SettingFilePersistance
 from .services.requests import RequestService
 from .services.settings import SettingService
@@ -26,6 +27,6 @@ def get_request_service() -> RequestService:
     if use_db:
         persistance = RequestDbPersistance()
     else:
-        persistance = SettingFilePersistance()
+        persistance = RequestFilePersistance()
     
     return RequestService(persistance=persistance)

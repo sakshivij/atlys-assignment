@@ -24,3 +24,7 @@ class IPersistanceOperation(ABC):
     @abstractmethod
     def delete(self, **kwargs):
         pass
+
+    @abstractmethod
+    async def get_all_unprocessed(self, **kwargs):
+        pass
