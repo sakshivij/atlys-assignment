@@ -20,3 +20,10 @@ Use these steps to do so:
 - Run `poetry env info --path` to get the path for the virtual environment created by poetry
 - Set the intrepretor to the path outputted from above. To set this up, `View -> Command Pallete -> Python: Select Interpreter`.
 - Run the project using debugger
+
+TODOs:
+1. Notification part
+2. Handle case where if setting id does not exist
+3. Handle case of not creating records multiple time
+4. Handle File persistance
+5. Complete background job
