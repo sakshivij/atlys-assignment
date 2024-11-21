@@ -1,6 +1,9 @@
+from typing import List
+
 from bson import ObjectId
-from ..router.model.user import User 
-from ..router.model.user import UserCreate
+
+from ..router.model.user import User, UserCreate
+
 
 class UserService:
     def __init__(self, db):
@@ -21,7 +24,7 @@ class UserService:
     async def get_all_users(self) -> List[User]:
         users_cursor = self.db.users.find()
         users = await users_cursor.to_list(length=None)
-        return [User (**{**user, '_id': str(user['_id'])})]
+        return [User (**{**user, '_id': str(user['_id'])}) for user in users]
 
 
     async def update_user(self, user_id: str, name: str = None) -> User:
