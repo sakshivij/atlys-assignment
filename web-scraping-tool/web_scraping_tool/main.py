@@ -56,12 +56,10 @@ def extract_data(soup: BeautifulSoup) -> List[dict]:
     Customize this method for different websites.
     """
     data = []
-    for item in soup.select(".mf-product-details"):  # Adjust selector as needed
+    for item in soup.select(".product-inner"):  # Adjust selector as needed
         name = item.select_one(".woo-loop-product__title").text.strip() if item.select_one(".woo-loop-product__title") else "N/A"
-        prices = item.select(".woocommerce-Price-amount bdi")
-        #img_url = item.select_one(".mf-product-thumbnail img").get('src')
-        if len(prices) == 2:
-            original_price = prices[0].text.strip()
-            discounted_price = prices[1].text.strip()
-        data.append({"name": name, "original_price": original_price, "discounted_price": discounted_price, "img_url": img_url})
+        img_url = item.select_one(".mf-product-thumbnail img").get('data-lazy-src')
+        original_price = item.select_one(".woocommerce-Price-amount bdi:nth-of-type(1)").text.strip()
+        discounted_price = "" #item.select_one(".woocommerce-Price-amount bdi:nth-of-type(2)").text.strip()
+        data.append({"name": name, "original_price": original_price, "discounted_price": discounted_price, "image": img_url})
     return data
