@@ -1,0 +1,34 @@
+version: '2.1'
+
+services: 
+
+  docker-mongo:
+    image: mongo:latest
+    container_name: docker-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME: foobar
+      - MONGO_INITDB_ROOT_PASSWORD: foobar
+    networks:
+      - backend
+
+  web_scrapping_tool:
+    build: .
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - docker-mongo
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+
+volumes:
+  mongo-data:

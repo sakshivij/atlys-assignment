@@ -2,12 +2,12 @@
 .ipynb_checkpoints
 .mypy_cache
 .vscode
-__pycache__
+__pycache__/
 .pytest_cache
 htmlcov
 dist
 site
-.coverage*
+.coverage
 coverage.xml
 .netlify
 test.db
@@ -28,3 +28,13 @@ archive.zip
 
 # macOS
 .DS_Store
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment and configuration files
+.env
+*.env
