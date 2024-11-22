@@ -14,11 +14,12 @@ class RequestDbPersistance(IPersistanceOperation):
     async def save(self, request_data: RequestCreate) -> Request:
         result = await self.db.requests.insert_one(request_data.dict())
         request = Request(
-            id=result.inserted_id, 
+            id=str(result.inserted_id), 
             name=request_data.name, 
             override_page_limit=request_data.override_page_limit,
             setting_id=request_data.setting_id,
-            status=request_data.status)
+            status=request_data.status,
+            meta=request_data.meta)
         return request
 
     async def get_by_id(self, request_id: str) -> Request:
@@ -38,7 +39,7 @@ class RequestDbPersistance(IPersistanceOperation):
         if update_fields:
             result = await self.db.requests.update_one({"_id": ObjectId(request_id)}, {"$set": update_fields})
             if result.modified_count > 0:
-                return await self.get_request(request_id)        
+                return await self.get_by_id(request_id)        
         return None
 
 

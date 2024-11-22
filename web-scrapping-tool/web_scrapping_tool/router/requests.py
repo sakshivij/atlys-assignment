@@ -3,8 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from ..dependencies import get_request_service
+from ..dependencies import get_request_service, get_scrap_service
+from ..router.model.scrap import Scrap
 from ..services.requests import RequestService
+from ..services.scraps import ScrapService
 from .model.request import Request, RequestCreate
 
 router = APIRouter(prefix="/requests")
@@ -36,3 +38,10 @@ async def update_request(request_id: str, request: RequestCreate, service: Reque
 async def delete_request(request_id: str, service: RequestService = Depends(get_request_service)):
     await service.delete_request(request_id=request_id)
     return {"detail": "Request deleted"}
+
+@router.get("/{request_id}/scraps", response_model=List[Scrap])
+async def get_request(request_id: str, service: ScrapService = Depends(get_scrap_service)):
+    db_request = await service.get_all_scraps()
+    if db_request is None:
+        raise HTTPException(status_code=404, detail="Request not found")
+    return db_request

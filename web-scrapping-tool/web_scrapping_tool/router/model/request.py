@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import Query
 from pydantic import BaseModel, validator
@@ -10,12 +10,23 @@ class Status(Enum):
     PENDING = "pending"
     PROCESSED = "processed"
 
+class KeyMapper(BaseModel):
+    field_name: str
+    mapped_to: str
+    requires_fetch: Optional[bool] = False
+
+class ScrapMetaInformation(BaseModel):
+    root_selector: str
+    field_mappings: List[KeyMapper]
+    is_multiple_items: bool    
+
 # TODO: Why these not being picked as optional
 class RequestCreate(BaseModel):
     override_page_limit: Optional[int]
     setting_id: str
     name: str
     status: Status
+    meta: ScrapMetaInformation
 
     def dict(self, **kwargs):
         data = super().dict(**kwargs)
@@ -36,6 +47,7 @@ class Request(BaseModel):
     setting_id: str
     name: str
     status: Status
+    meta: ScrapMetaInformation
 
     def dict(self, **kwargs):
         data = super().dict(**kwargs)
