@@ -3,6 +3,8 @@ import os
 from fastapi import Depends
 
 from .config import EnvironmentVariables
+from .notification.abstract import INotificationOperation
+from .notification.console import ConsoleNotification
 from .persistance.abstract import IPersistanceOperation
 from .persistance.database.implementations.requests import RequestDbPersistance
 from .persistance.database.implementations.scraps import ScrapDbPersistance
@@ -42,3 +44,6 @@ def get_scrap_service() -> ScrapService:
     
     return ScrapService(persistance=persistance)
 
+
+def get_notification_service() -> INotificationOperation:
+    return ConsoleNotification()

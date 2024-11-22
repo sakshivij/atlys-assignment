@@ -7,8 +7,8 @@ from typing import List
 import requests
 from bs4 import BeautifulSoup
 
-from ..dependencies import (get_request_service, get_scrap_service,
-                            get_setting_service)
+from ..dependencies import (get_notification_service, get_request_service,
+                            get_scrap_service, get_setting_service)
 from ..persistance.abstract import IPersistanceOperation
 from ..router.model.request import Request, ScrapMetaInformation, Status
 from ..router.model.scrap import ScrapCreate
@@ -23,6 +23,8 @@ async def process_records():
     request_service = get_request_service()
     setting_service = get_setting_service()
     scrap_service = get_scrap_service()
+    notification_service = get_notification_service()
+    
     while True:
         print(f"Processing requests at {datetime.utcnow()}...")
 
@@ -43,6 +45,7 @@ async def process_records():
                     ]
 
                     await scrap_service.create_scrap(record.id, scrap_records)
+                    notification_service.notify(len(records), record.id)
 
             record.status = Status.PROCESSED
             await request_service.update_request(record.id, record)
