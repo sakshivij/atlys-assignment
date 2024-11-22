@@ -12,7 +12,7 @@ class EnvironmentVariables(BaseSettings):
     origins: str = Field("http://localhost:8080", env='ORIGINS')
     database: str = Field("main", env="DATABASE")
     usedatabase: str = Field("true", env="USEDATABASE")
-    token: str = Field(..., "TOKEN")
+    token: str = Field("token", env="TOKEN")
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'
