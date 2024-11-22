@@ -14,6 +14,7 @@ class KeyMapper(BaseModel):
     field_name: str
     mapped_to: str
     requires_fetch: Optional[bool] = False
+    attribute_name: Optional[str] = ""
 
 class ScrapMetaInformation(BaseModel):
     root_selector: str

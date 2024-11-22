@@ -27,3 +27,6 @@ TODOs:
 3. Handle case of not creating records multiple time
 4. Handle File persistance
 5. Complete background job
+6. Fix Get by Request Id Scraps
+7. Add Filter by status
+8. Error Handling

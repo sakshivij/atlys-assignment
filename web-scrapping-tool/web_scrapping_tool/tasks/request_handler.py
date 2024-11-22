@@ -1,5 +1,7 @@
 import asyncio
+import os
 from datetime import datetime
+from pathlib import Path
 from typing import List
 
 import requests
@@ -96,12 +98,40 @@ def extract_data(
 
             if element:
                 extracted_item[field_mapping.field_name] = element.text.strip()
-                if field_mapping.requires_fetch:
-                    print('Further download and save file')
-                    #extracted_item[field_mapping.field_name] = element.text.strip()
+                if field_mapping.requires_fetch is True:
+                    print(f'Further download and save file {element}')
+                    if len(field_mapping.attribute_name) > 0:
+                        download_image(element.get(field_mapping.attribute_name))
+                        extracted_item[field_mapping.field_name] = element.get(field_mapping.attribute_name)
+                    else:
+                        download_image(element.text.strip())
+                        extracted_item[field_mapping.field_name] = element.text.strip()
             else:
                 extracted_item[field_mapping.field_name] = "N/A"
 
         data.append(extracted_item)
 
     return data
+
+def download_image(img_url: str) -> str:
+    """
+    Download the image from the given URL and save it to the specified folder.
+    Returns the path to the saved image file.
+    """
+    try:
+        save_folder = '../../images'
+        response = requests.get(img_url)
+        response.raise_for_status()
+        
+        img_name = os.path.basename(img_url)
+        
+        save_path = Path(save_folder) / img_name
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(save_path, 'wb') as img_file:
+            img_file.write(response.content)
+        
+        return str(save_path)
+    except requests.RequestException as e:
+        print(f"Error downloading image {img_url}: {e}")
+        return "" 
