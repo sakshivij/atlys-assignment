@@ -147,3 +147,4 @@ Use these steps to do so:
 7. Retry mechanism
 8. Caching
 9. Auth
+10. Avoid duplicates being saved ( Files + Db records )

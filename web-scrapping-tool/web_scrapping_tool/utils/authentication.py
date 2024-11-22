@@ -12,7 +12,8 @@ bearer_scheme = HTTPBearer()
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     if credentials.credentials != STATIC_TOKEN:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or missing token",
         )
     return credentials.credentials
+
