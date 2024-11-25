@@ -149,4 +149,4 @@ Use these steps to do so:
 | Error Handling                                        | Pending     |     P2   |
 | Retry mechanism                                       | Done        |          |
 | Caching                                               | Pending     |     P1   |
-| Auth - Fix for delete                                 | Pending     |     P1   |
+| Auth - Fix for delete                                 | Done        |     P1   |

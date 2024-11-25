@@ -34,10 +34,10 @@ class ScrapDbPersistance(IScrapsDbPersistance):
             if existing_scrap:
                 existing_data = existing_scrap['data']
 
-                if existing_data['amount'] != scrap_data_dict.get('amount'):
+                if existing_data['price'] != scrap_data_dict.get('price'):
                     update_ops.append(UpdateOne(
                         {"_id": existing_scrap["_id"]},
-                        {"$set": {"data.amount": scrap_data_dict['amount']}}
+                        {"$set": {"data.price": scrap_data_dict['data']['price']}}
                     ))
             else:
                 insert_ops.append(scrap_data_dict)
