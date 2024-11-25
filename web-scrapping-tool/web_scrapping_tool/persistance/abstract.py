@@ -25,6 +25,12 @@ class IPersistanceOperation(ABC):
     def delete(self, **kwargs):
         pass
 
+class IScrapsDbPersistance(IPersistanceOperation):
     @abstractmethod
-    async def get_all_unprocessed(self, **kwargs):
+    async def get_data_by_request_id(self, request_id: str):
+        pass
+
+class IRequestDbPersistance(IPersistanceOperation):
+    @abstractmethod
+    async def get_all_unprocessed(self, request_id: str):
         pass

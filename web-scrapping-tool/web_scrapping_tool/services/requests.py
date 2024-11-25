@@ -2,12 +2,12 @@ from typing import List
 
 from bson import ObjectId
 
-from ..persistance.abstract import IPersistanceOperation
+from ..persistance.abstract import IRequestDbPersistance
 from ..router.model.request import Request, RequestCreate
 
 
 class RequestService:
-    def __init__(self, persistance: IPersistanceOperation):
+    def __init__(self, persistance: IRequestDbPersistance):
         self.persistance = persistance
 
     async def create_request(self, request_data: RequestCreate) -> Request:

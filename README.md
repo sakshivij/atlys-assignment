@@ -138,13 +138,16 @@ Use these steps to do so:
 
 
 **TODOs:**
-1. Handle case where if setting id does not exist
-2. Handle case of not creating records multiple time
-3. Handle File persistance
-4. Fix Get by Request Id Scraps
-5. Add Filter by status
-6. Error Handling
-7. Retry mechanism
-8. Caching
-9. Auth - Fix for delete
-10. Avoid duplicates being saved ( Files + Db records )
+
+| Issue                                                 | Status      |
+|-------------------------------------------------------|-------------|
+| Handle case where if setting id does not exist        | Done        |
+| Handle case of not creating records multiple times    | Pending     |
+| Handle File persistence                               | Pending     |
+| Fix Get by Request Id Scraps                          | Done     |
+| Add Filter by status                                  | Pending     |
+| Error Handling                                        | Pending     |
+| Retry mechanism                                       | Done        |
+| Caching                                               | Pending     |
+| Auth - Fix for delete                                 | Pending     |
+| Avoid duplicates being saved (Files + DB records)     | Pending     |

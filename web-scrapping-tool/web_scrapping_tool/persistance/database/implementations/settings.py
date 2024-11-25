@@ -47,6 +47,3 @@ class SettingDbPersistance(IPersistanceOperation):
     async def delete(self, setting_id: str) -> bool:
         result = await self.db.settings.delete_one({"_id": ObjectId(setting_id)})
         return result.deleted_count > 0
-    
-    async def get_all_unprocessed(self, **kwargs):
-        pass

@@ -2,12 +2,12 @@ from typing import List
 
 from bson import ObjectId
 
-from ....persistance.abstract import IPersistanceOperation
+from ....persistance.abstract import IScrapsDbPersistance
 from ....persistance.database.mongo import get_db
 from ....router.model.scrap import Scrap
 
 
-class ScrapDbPersistance(IPersistanceOperation):
+class ScrapDbPersistance(IScrapsDbPersistance):
     def __init__(self):
         self.db = get_db()
 
@@ -49,6 +49,9 @@ class ScrapDbPersistance(IPersistanceOperation):
     async def delete(self, scrap_id: str) -> bool:
         result = await self.db.scraps.delete_one({"_id": ObjectId(scrap_id)})
         return result.deleted_count > 0
-    
-    async def get_all_unprocessed(self):
-        pass
+
+    async def get_data_by_request_id(self, request_id: str) -> List[Scrap]:
+        scraps = await self.db.scraps.find({"request_id": request_id}).to_list(None)
+        if scraps:
+            return [Scrap(**{**scrap, "id": str(scrap['_id'])}) for scrap in scraps]
+        return []

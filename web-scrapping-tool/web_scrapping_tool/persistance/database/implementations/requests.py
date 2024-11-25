@@ -2,12 +2,12 @@ from typing import List
 
 from bson import ObjectId
 
-from ....persistance.abstract import IPersistanceOperation
+from ....persistance.abstract import IRequestDbPersistance
 from ....persistance.database.mongo import get_db
 from ....router.model.request import Request, RequestCreate, Status
 
 
-class RequestDbPersistance(IPersistanceOperation):
+class RequestDbPersistance(IRequestDbPersistance):
     def __init__(self):
         self.db = get_db()
 
