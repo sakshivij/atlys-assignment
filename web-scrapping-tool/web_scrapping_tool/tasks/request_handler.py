@@ -6,6 +6,8 @@ from typing import List
 
 import requests
 from bs4 import BeautifulSoup
+from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                      wait_fixed)
 
 from ..dependencies import (get_notification_service, get_request_service,
                             get_scrap_service, get_setting_service)
@@ -69,15 +71,20 @@ def scrap_data(setting: Setting, request: Request):
             limit = setting.max_pages_limit
     data_records = []    
     for page_number in range(limit):
-        page_number = page_number + 1
-        paginated_url += str(page_number)
-        response = requests.get(paginated_url, proxies=setting.proxy, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
-        data = extract_data(soup, request.meta)
-        print(f"Found {len(data)} records")
-        data_records.extend(data)
-
+            page_number = page_number + 1
+            paginated_url = f"{paginated_url}{page_number}"
+            
+            try:
+                page_content = fetch_page_content(paginated_url, proxies=setting.proxy, timeout=10)
+                soup = BeautifulSoup(page_content, "html.parser")
+                data = extract_data(soup, request.meta)
+                
+                print(f"Found {len(data)} records on page {page_number}")
+                data_records.extend(data)
+            
+            except requests.exceptions.RequestException as err:
+                print(f"Failed to fetch page {page_number}: {err}")
+                continue
     return data_records
 
 
@@ -138,3 +145,13 @@ def download_image(img_url: str) -> str:
     except requests.RequestException as e:
         print(f"Error downloading image {img_url}: {e}")
         return "" 
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_fixed(2),
+    retry=retry_if_exception_type((requests.exceptions.Timeout, requests.exceptions.RequestException))
+)
+def fetch_page_content(url, proxies=None, timeout=10):
+    response = requests.get(url, proxies=proxies, timeout=timeout)
+    response.raise_for_status()
+    return response.text 
