@@ -146,5 +146,5 @@ Use these steps to do so:
 6. Error Handling
 7. Retry mechanism
 8. Caching
-9. Auth
+9. Auth - Fix for delete
 10. Avoid duplicates being saved ( Files + Db records )
