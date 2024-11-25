@@ -2,6 +2,7 @@ from hashlib import sha256
 from typing import List
 
 from bson import ObjectId
+from pymongo import UpdateOne
 
 from ....persistance.abstract import IScrapsDbPersistance
 from ....persistance.database.mongo import get_db
@@ -13,35 +14,55 @@ class ScrapDbPersistance(IScrapsDbPersistance):
         self.db = get_db()
     
     def generate_data_hash(self, scrap_data: dict) -> str:
-        return sha256(str(scrap_data).encode('utf-8')).hexdigest()
+        stable_fields = {
+            "name": scrap_data.get("name"),
+        }
+        return sha256(str(stable_fields).encode('utf-8')).hexdigest()
 
     async def save(self, request_id:str, scrap_data_list: list):
         scrap_data_dicts = [scrap_data.dict() for scrap_data in scrap_data_list]
-        
+
         for scrap_data_dict in scrap_data_dicts:
             scrap_data_dict['data_hash'] = self.generate_data_hash(scrap_data_dict)
 
         insert_ops = []
+        update_ops = []
+
         for scrap_data_dict in scrap_data_dicts:
             existing_scrap = await self.db.scraps.find_one({"data_hash": scrap_data_dict['data_hash']})
 
-            if not existing_scrap:
+            if existing_scrap:
+                existing_data = existing_scrap['data']
+
+                if existing_data['amount'] != scrap_data_dict.get('amount'):
+                    update_ops.append(UpdateOne(
+                        {"_id": existing_scrap["_id"]},
+                        {"$set": {"data.amount": scrap_data_dict['amount']}}
+                    ))
+            else:
                 insert_ops.append(scrap_data_dict)
 
-        if insert_ops:
-            result = await self.db.scraps.insert_many(insert_ops)
+        if insert_ops or update_ops:
+            if update_ops:
+                await self.db.scraps.bulk_write(update_ops)
 
-            scraps = [
-                Scrap(
-                    id=str(inserted_id),
-                    request_id=request_id,
-                    data=scrap_data_dict
-                )
-                for inserted_id, scrap_data_dict in zip(result.inserted_ids, insert_ops)
-            ]
+            if insert_ops:
+                result = await self.db.scraps.insert_many(insert_ops)
+
+                inserted_scraps = [
+                    Scrap(
+                        id=str(inserted_id),
+                        request_id=request_id,
+                        data=scrap_data_dict
+                    )
+                    for inserted_id, scrap_data_dict in zip(result.inserted_ids, insert_ops)
+                ]
+                scraps = inserted_scraps
+            else:
+                scraps = []
+
         else:
             scraps = []
-
         return scraps
 
     async def get_by_id(self, scrap_id: str) -> Scrap:

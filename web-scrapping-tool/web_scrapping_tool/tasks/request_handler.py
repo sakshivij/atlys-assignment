@@ -42,7 +42,7 @@ async def process_records():
                 if records and len(records) > 0:
                     print(f'Total records: {len(records)}')
                     scrap_records: List[ScrapCreate] = [
-                        ScrapCreate(request_id=record.id, data=scrap_record)
+                        ScrapCreate(data=scrap_record)
                         for scrap_record in records
                     ]
 

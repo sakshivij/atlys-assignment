@@ -139,14 +139,14 @@ Use these steps to do so:
 
 **TODOs:**
 
-| Issue                                                 | Status      |
-|-------------------------------------------------------|-------------|
-| Handle case where if setting id does not exist        | Done        |
-| Handle case of not creating records multiple times    | Done        |
-| Handle File persistence                               | Pending     |
-| Fix Get by Request Id Scraps                          | Done        |
-| Add Filter by status                                  | Pending     |
-| Error Handling                                        | Pending     |
-| Retry mechanism                                       | Done        |
-| Caching                                               | Pending     |
-| Auth - Fix for delete                                 | Pending     |
+| Issue                                                 | Status      | Priority |
+|-------------------------------------------------------|-------------|----------|
+| Handle case where if setting id does not exist        | Done        |          | 
+| Handle case of not creating records multiple times    | Done        |          |
+| Handle File persistence                               | Pending     |     P4   |
+| Fix Get by Request Id Scraps                          | Done        |          |
+| Add Filter by status                                  | Pending     |     P4   |
+| Error Handling                                        | Pending     |     P2   |
+| Retry mechanism                                       | Done        |          |
+| Caching                                               | Pending     |     P1   |
+| Auth - Fix for delete                                 | Pending     |     P1   |
