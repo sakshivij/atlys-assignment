@@ -142,12 +142,11 @@ Use these steps to do so:
 | Issue                                                 | Status      |
 |-------------------------------------------------------|-------------|
 | Handle case where if setting id does not exist        | Done        |
-| Handle case of not creating records multiple times    | Pending     |
+| Handle case of not creating records multiple times    | Done        |
 | Handle File persistence                               | Pending     |
-| Fix Get by Request Id Scraps                          | Done     |
+| Fix Get by Request Id Scraps                          | Done        |
 | Add Filter by status                                  | Pending     |
 | Error Handling                                        | Pending     |
 | Retry mechanism                                       | Done        |
 | Caching                                               | Pending     |
 | Auth - Fix for delete                                 | Pending     |
-| Avoid duplicates being saved (Files + DB records)     | Pending     |

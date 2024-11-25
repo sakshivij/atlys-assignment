@@ -1,3 +1,4 @@
+from hashlib import sha256
 from typing import List
 
 from bson import ObjectId
@@ -10,19 +11,37 @@ from ....router.model.scrap import Scrap
 class ScrapDbPersistance(IScrapsDbPersistance):
     def __init__(self):
         self.db = get_db()
+    
+    def generate_data_hash(self, scrap_data: dict) -> str:
+        return sha256(str(scrap_data).encode('utf-8')).hexdigest()
 
     async def save(self, request_id:str, scrap_data_list: list):
         scrap_data_dicts = [scrap_data.dict() for scrap_data in scrap_data_list]
-        result = await self.db.scraps.insert_many(scrap_data_dicts)
-        scraps = [
-            Scrap(
-                id=str(inserted_id),
-                request_id=request_id,
-                data=scrap_data_dict  # Pass the dictionary here, not the object
-            )
-            for inserted_id, scrap_data_dict in zip(result.inserted_ids, scrap_data_dicts)
-        ]
-    
+        
+        for scrap_data_dict in scrap_data_dicts:
+            scrap_data_dict['data_hash'] = self.generate_data_hash(scrap_data_dict)
+
+        insert_ops = []
+        for scrap_data_dict in scrap_data_dicts:
+            existing_scrap = await self.db.scraps.find_one({"data_hash": scrap_data_dict['data_hash']})
+
+            if not existing_scrap:
+                insert_ops.append(scrap_data_dict)
+
+        if insert_ops:
+            result = await self.db.scraps.insert_many(insert_ops)
+
+            scraps = [
+                Scrap(
+                    id=str(inserted_id),
+                    request_id=request_id,
+                    data=scrap_data_dict
+                )
+                for inserted_id, scrap_data_dict in zip(result.inserted_ids, insert_ops)
+            ]
+        else:
+            scraps = []
+
         return scraps
 
     async def get_by_id(self, scrap_id: str) -> Scrap:
